@@ -20,7 +20,10 @@ class ClickPesaService
             (string) config('services.clickpesa.token_cache_key', 'clickpesa.token'),
             now()->addMinutes(55),
             function (): string {
-                $response = $this->baseRequest()
+                $response = Http::baseUrl((string) config('services.clickpesa.base_url'))
+                    ->acceptJson()
+                    ->timeout((int) config('services.clickpesa.timeout', 20))
+                    ->connectTimeout((int) config('services.clickpesa.connect_timeout', 10))
                     ->withHeaders([
                         'client-id' => (string) config('services.clickpesa.client_id'),
                         'api-key' => (string) config('services.clickpesa.api_key'),
