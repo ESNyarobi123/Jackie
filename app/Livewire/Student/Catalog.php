@@ -165,6 +165,9 @@ class Catalog extends Component
         ]);
 
         try {
+            // Clear cached token to force fresh generation in case it expired or is invalid
+            Cache::forget(config('services.clickpesa.token_cache_key', 'clickpesa.token'));
+
             $previewPayload = $clickPesa->previewUssdPush(
                 amount: $amount,
                 currency: $currency,
@@ -197,10 +200,17 @@ class Catalog extends Component
             $this->activePayment = $payment->fresh();
             $this->paymentMessage = 'USSD push sent. Approve on your phone, then tap “Check status”.';
         } catch (\Throwable $e) {
+            $errorBody = '';
+            if ($e instanceof \Illuminate\Http\Client\RequestException) {
+                $errorBody = $e->response?->body() ?? '';
+            }
+
             Log::warning('ClickPesa initiation failed', [
                 'payment_id' => $payment->id,
                 'reference' => $payment->reference,
                 'message' => $e->getMessage(),
+                'status' => $e instanceof \Illuminate\Http\Client\RequestException ? $e->response?->status() : null,
+                'body' => $errorBody,
                 'network' => $this->selectedNetwork,
                 'phone' => $phoneNumber,
             ]);
@@ -211,11 +221,20 @@ class Catalog extends Component
                 'metadata' => [
                     ...($payment->metadata ?? []),
                     'error' => $e->getMessage(),
+                    'error_body' => $errorBody ?: null,
                 ],
             ])->save();
 
             $this->activePayment = $payment->fresh();
-            $this->paymentMessage = 'Payment could not be initiated. Please try again or contact support.';
+
+            // Show user-friendly message based on error type
+            if (str_contains($e->getMessage(), '401')) {
+                $this->paymentMessage = 'Payment service authentication failed. Please contact support.';
+            } elseif (str_contains($e->getMessage(), '403')) {
+                $this->paymentMessage = 'Payment service access denied. Please contact support.';
+            } else {
+                $this->paymentMessage = 'Payment could not be initiated. Please try again or contact support.';
+            }
         }
     }
 
