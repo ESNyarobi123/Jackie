@@ -241,9 +241,17 @@ class ClickPesaService
      */
     private function authenticatedRequest(): PendingRequest
     {
+        $token = $this->token();
+
+        Log::info('ClickPesa auth token used', [
+            'token_length' => strlen($token),
+            'token_start' => substr($token, 0, 20),
+            'has_bearer_prefix' => str_starts_with($token, 'Bearer '),
+        ]);
+
         return $this->baseRequest()
             ->withHeaders([
-                'Authorization' => 'Bearer ' . $this->token(),
+                'Authorization' => 'Bearer ' . $token,
             ]);
     }
 
