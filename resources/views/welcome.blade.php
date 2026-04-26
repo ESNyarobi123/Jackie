@@ -226,27 +226,18 @@
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="nav-dropdown-menu">
-                        <a href="#courses" class="nav-dropdown-item">
-                            <div class="nav-dropdown-icon">🗣️</div>
-                            <div>
-                                <div class="nav-dropdown-item-title">Spoken English</div>
-                                <div class="nav-dropdown-item-desc">8 weeks &bull; TSh 25,000</div>
-                            </div>
-                        </a>
-                        <a href="#courses" class="nav-dropdown-item">
-                            <div class="nav-dropdown-icon">💼</div>
-                            <div>
-                                <div class="nav-dropdown-item-title">Business English</div>
-                                <div class="nav-dropdown-item-desc">6 weeks &bull; TSh 30,000</div>
-                            </div>
-                        </a>
-                        <a href="#courses" class="nav-dropdown-item">
-                            <div class="nav-dropdown-icon">📝</div>
-                            <div>
-                                <div class="nav-dropdown-item-title">IELTS Preparation</div>
-                                <div class="nav-dropdown-item-desc">10 weeks &bull; TSh 45,000</div>
-                            </div>
-                        </a>
+                        @php
+                            $navCourses = \App\Models\Course::where('status', \App\Enums\CourseStatus::Published)->orderByDesc('is_featured')->limit(4)->get();
+                        @endphp
+                        @foreach($navCourses as $navCourse)
+                            <a href="#courses" class="nav-dropdown-item">
+                                <div class="nav-dropdown-icon">{{ str_contains(strtolower($navCourse->title), 'spoken') ? '🗣️' : (str_contains(strtolower($navCourse->title), 'business') ? '💼' : (str_contains(strtolower($navCourse->title), 'ielts') ? '📝' : '📚')) }}</div>
+                                <div>
+                                    <div class="nav-dropdown-item-title">{{ $navCourse->title }}</div>
+                                    <div class="nav-dropdown-item-desc">{{ $navCourse->duration_days }} weeks &bull; TSh {{ number_format($navCourse->price_amount, 0) }}</div>
+                                </div>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
 
@@ -712,6 +703,21 @@
                         @if($course->is_featured)
                             <div class="pricing-featured-badge">Best Value</div>
                         @endif
+                        @php
+                            $pricingImages = [
+                                'spoken' => 'https://images.unsplash.com/photo-1543165796-5426273eaab3?w=600&q=80',
+                                'business' => 'https://images.unsplash.com/photo-1552664733-d6d7a8a4345?w=600&q=80',
+                                'ielts' => 'https://images.unsplash.com/photo-1456511780578-1a7e62e0c3c5?w=600&q=80',
+                                'default' => 'https://images.unsplash.com/photo-1509062523349-8427d3e7e577?w=600&q=80',
+                            ];
+                            $pricingImg = str_contains(strtolower($course->title), 'spoken') ? $pricingImages['spoken']
+                                : (str_contains(strtolower($course->title), 'business') ? $pricingImages['business']
+                                : (str_contains(strtolower($course->title), 'ielts') ? $pricingImages['ielts']
+                                : $pricingImages['default']));
+                        @endphp
+                        <div style="border-radius:.75rem; overflow:hidden; margin-bottom:1.25rem; height:140px;">
+                            <img src="{{ $pricingImg }}" alt="{{ $course->title }}" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" />
+                        </div>
                         <div class="font-bold text-lg mb-1">{{ $course->title }}</div>
                         <p class="text-sm text-[rgba(30,41,59,0.55)] mb-4">{{ $course->excerpt ?? 'Improve your English with structured lessons.' }}</p>
                         <div class="pricing-price mb-4">{{ $course->currency }} {{ number_format($course->price_amount, 0) }} <span>/course</span></div>
@@ -824,7 +830,7 @@
         <section class="container py-16 reveal">
             <div class="final-cta">
                 <h2 class="section-title mb-3">Ready to speak English with confidence?</h2>
-                <p class="section-subtitle mx-auto mb-6">Start your learning journey today and join 500+ students already seeing results.</p>
+                <p class="section-subtitle mx-auto mb-6">Start your learning journey today and join {{ max($totalStudents, 500) }}+ students already seeing results.</p>
                 <div class="flex flex-wrap gap-3 justify-center">
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}" class="btn-premium">
