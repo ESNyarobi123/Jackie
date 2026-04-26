@@ -149,7 +149,7 @@ class ClickPesaService
      */
     public function makeOrderReference(): string
     {
-        return 'CP-'.Str::upper((string) Str::ulid());
+        return 'CP'.Str::upper((string) Str::ulid());
     }
 
     /**
@@ -249,10 +249,12 @@ class ClickPesaService
             'has_bearer_prefix' => str_starts_with($token, 'Bearer '),
         ]);
 
-        return $this->baseRequest()
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $token,
-            ]);
+        return Http::baseUrl((string) config('services.clickpesa.base_url'))
+            ->acceptJson()
+            ->asJson()
+            ->timeout((int) config('services.clickpesa.timeout', 20))
+            ->connectTimeout((int) config('services.clickpesa.connect_timeout', 10))
+            ->withToken($token);
     }
 
     /**

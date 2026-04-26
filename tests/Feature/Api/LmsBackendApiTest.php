@@ -322,7 +322,7 @@ test('student can create a clickpesa mobile payment order', function () {
 
     expect($payment->provider)->toBe(PaymentProvider::ClickPesa)
         ->and($payment->status)->toBe(PaymentStatus::Pending)
-        ->and($payment->reference)->toStartWith('CP-')
+        ->and($payment->reference)->toStartWith('CP')
         ->and($payment->metadata['phone_number'])->toBe('255712345678')
         ->and($payment->gateway_payload['preview']['sender']['accountProvider'])->toBe('M-PESA');
 
