@@ -13,6 +13,7 @@ use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Services\Payment\ClickPesaService;
 use App\Services\Payment\PaymentAccessService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithPagination;
 use Livewire\Component;
