@@ -149,7 +149,7 @@ class ClickPesaService
      */
     public function makeOrderReference(): string
     {
-        return 'CP'.Str::upper((string) Str::ulid());
+        return 'CP'.Str::upper(Str::random(18));
     }
 
     /**
