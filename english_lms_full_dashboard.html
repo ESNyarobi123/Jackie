@@ -1,0 +1,672 @@
+
+<h2 class="sr-only">English LMS Dashboard — Student na Admin views zote mbili</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.logo{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.logo span{color:#1D9E75}
+.switch-btn{display:flex;gap:4px;background:var(--color-background-secondary);border-radius:20px;padding:3px}
+.sw{font-size:11px;padding:4px 12px;border-radius:20px;border:none;cursor:pointer;background:transparent;color:var(--color-text-secondary);font-weight:500;transition:all .15s}
+.sw.active{background:var(--color-background-primary);color:var(--color-text-primary);border:0.5px solid var(--color-border-secondary)}
+.layout{display:flex;height:calc(100vh - 42px);min-height:580px}
+.sidebar{width:188px;border-right:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:12px 0;flex-shrink:0;overflow-y:auto}
+.main{flex:1;overflow-y:auto;background:var(--color-background-tertiary);padding:16px}
+.nav-section{font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.06em;text-transform:uppercase;padding:10px 16px 4px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 16px;cursor:pointer;color:var(--color-text-secondary);font-size:12px;border-left:2px solid transparent;transition:all .12s}
+.nav-item:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.nav-item.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-left-color:#1D9E75}
+.nav-icon{width:14px;height:14px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.badge-count{margin-left:auto;font-size:10px;background:var(--color-background-danger);color:var(--color-text-danger);padding:1px 5px;border-radius:10px;font-weight:500}
+.badge-new{margin-left:auto;font-size:10px;background:var(--color-background-success);color:var(--color-text-success);padding:1px 5px;border-radius:10px;font-weight:500}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:16px;font-weight:500;margin-bottom:14px;color:var(--color-text-primary)}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:14px}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.metric-label{font-size:10px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-val{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.metric-sub{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+.metric-val.green{color:#0F6E56}
+.metric-val.amber{color:#854F0B}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:10px}
+.card-title{font-size:12px;font-weight:500;margin-bottom:10px;color:var(--color-text-primary)}
+.row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.row:last-child{border-bottom:none}
+.avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0}
+.av-g{background:#E1F5EE;color:#0F6E56}
+.av-b{background:#E6F1FB;color:#0C447C}
+.av-a{background:#FAEEDA;color:#854F0B}
+.av-p{background:#EEEDFE;color:#3C3489}
+.pill{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500;white-space:nowrap}
+.pill-green{background:#E1F5EE;color:#0F6E56}
+.pill-amber{background:#FAEEDA;color:#854F0B}
+.pill-red{background:#FCEBEB;color:#A32D2D}
+.pill-blue{background:#E6F1FB;color:#0C447C}
+.pill-gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.progress-bar{height:5px;border-radius:3px;background:var(--color-background-secondary);overflow:hidden;flex:1}
+.progress-fill{height:100%;border-radius:3px;background:#1D9E75}
+.btn{font-size:11px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);cursor:pointer;color:var(--color-text-primary);transition:all .12s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-primary{background:#1D9E75;color:white;border-color:#1D9E75}
+.btn-primary:hover{background:#0F6E56}
+.btn-danger{background:#FCEBEB;color:#A32D2D;border-color:#F09595}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.lesson-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px}
+.lesson-thumb{height:60px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);margin-bottom:6px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.lesson-title{font-size:11px;font-weight:500;margin-bottom:2px}
+.lesson-meta{font-size:10px;color:var(--color-text-tertiary)}
+.live-card{background:#E1F5EE;border:0.5px solid #5DCAA5;border-radius:var(--border-radius-md);padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#1D9E75;flex-shrink:0}
+.quiz-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);margin-bottom:6px;cursor:pointer;transition:all .12s}
+.quiz-item:hover{border-color:var(--color-border-primary);background:var(--color-background-secondary)}
+.cert-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;text-align:center;margin-bottom:6px}
+.sub-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;margin-bottom:8px}
+.input-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.input-row label{font-size:11px;color:var(--color-text-secondary);width:80px;flex-shrink:0}
+.inp{flex:1;font-size:11px;padding:5px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)}
+.admin-stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;text-align:center}
+.stat-big{font-size:22px;font-weight:500}
+.stat-lbl{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{font-size:10px;font-weight:500;color:var(--color-text-secondary);text-align:left;padding:5px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tbl td{padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--color-background-secondary)}
+.user-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500}
+.bar-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+.bar-label{font-size:11px;width:90px;color:var(--color-text-secondary)}
+.bar-bg{flex:1;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:#1D9E75}
+.bar-val{font-size:11px;font-weight:500;min-width:28px;text-align:right}
+.notif-item{display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.notif-item:last-child{border-bottom:none}
+.notif-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.notif-txt{font-size:12px;color:var(--color-text-primary)}
+.notif-time{font-size:10px;color:var(--color-text-tertiary)}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.act-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.act-item:last-child{border-bottom:none}
+.revenue-bar-row{display:flex;align-items:flex-end;gap:4px;height:80px;padding-bottom:4px}
+.rev-bar{flex:1;background:#5DCAA5;border-radius:2px 2px 0 0;position:relative;min-height:4px}
+.rev-lbl{font-size:9px;color:var(--color-text-tertiary);text-align:center;margin-top:4px}
+</style>
+
+<div class="topbar">
+  <div class="logo">Jackie<span>English</span> LMS</div>
+  <div class="switch-btn">
+    <button class="sw active" onclick="switchView('student')">Student view</button>
+    <button class="sw" onclick="switchView('admin')">Admin view</button>
+  </div>
+  <div style="font-size:11px;color:var(--color-text-secondary)" id="view-label">Mwanafunzi: Amina Hassan</div>
+</div>
+
+<div class="layout">
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar" id="sidebar">
+
+  <div id="student-nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" onclick="showPage('s-home')">
+      <div class="nav-icon">⊞</div> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('s-courses')">
+      <div class="nav-icon">▶</div> Kozi zangu
+    </div>
+    <div class="nav-item" onclick="showPage('s-live')">
+      <div class="nav-icon">◉</div> Live classes
+      <span class="badge-new">Leo</span>
+    </div>
+    <div class="nav-item" onclick="showPage('s-tasks')">
+      <div class="nav-icon">✓</div> Kazi zangu
+      <span class="badge-count">2</span>
+    </div>
+    <div class="nav-section">Mwanafunzi</div>
+    <div class="nav-item" onclick="showPage('s-progress')">
+      <div class="nav-icon">◎</div> Maendeleo yangu
+    </div>
+    <div class="nav-item" onclick="showPage('s-cert')">
+      <div class="nav-icon">★</div> Vyeti vyangu
+    </div>
+    <div class="nav-section">Akaunti</div>
+    <div class="nav-item" onclick="showPage('s-payment')">
+      <div class="nav-icon">$</div> Malipo
+    </div>
+    <div class="nav-item" onclick="showPage('s-settings')">
+      <div class="nav-icon">⚙</div> Mipangilio
+    </div>
+  </div>
+
+  <div id="admin-nav" style="display:none">
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" onclick="showPage('a-home')">
+      <div class="nav-icon">⊞</div> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('a-students')">
+      <div class="nav-icon">👥</div> Wanafunzi
+      <span class="badge-count">127</span>
+    </div>
+    <div class="nav-item" onclick="showPage('a-revenue')">
+      <div class="nav-icon">$</div> Mapato
+    </div>
+    <div class="nav-section">Maudhui</div>
+    <div class="nav-item" onclick="showPage('a-courses')">
+      <div class="nav-icon">▶</div> Kozi
+    </div>
+    <div class="nav-item" onclick="showPage('a-live')">
+      <div class="nav-icon">◉</div> Live classes
+    </div>
+    <div class="nav-item" onclick="showPage('a-tasks')">
+      <div class="nav-icon">✓</div> Kazi & Grades
+      <span class="badge-count">8</span>
+    </div>
+    <div class="nav-section">Mfumo</div>
+    <div class="nav-item" onclick="showPage('a-payments')">
+      <div class="nav-icon">⚡</div> Malipo
+    </div>
+    <div class="nav-item" onclick="showPage('a-notif')">
+      <div class="nav-icon">🔔</div> Notifications
+    </div>
+    <div class="nav-item" onclick="showPage('a-settings')">
+      <div class="nav-icon">⚙</div> Settings
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main">
+
+<!-- ======= STUDENT PAGES ======= -->
+
+<!-- S: HOME -->
+<div class="page active" id="s-home">
+  <div class="page-title">Karibu, Amina! 👋</div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Kozi inayoendelea</div><div class="metric-val green">2</div><div class="metric-sub">kati ya 3 ulizonunua</div></div>
+    <div class="metric"><div class="metric-label">Maendeleo ya wiki</div><div class="metric-val">68%</div><div class="metric-sub">+12% wiki iliyopita</div></div>
+    <div class="metric"><div class="metric-label">Subscription</div><div class="metric-val amber">18 siku</div><div class="metric-sub">zinazoabkia</div></div>
+    <div class="metric"><div class="metric-label">Kazi zilizobaki</div><div class="metric-val">2</div><div class="metric-sub">zinasubiri</div></div>
+  </div>
+
+  <div class="live-card">
+    <div class="live-dot"></div>
+    <div style="flex:1">
+      <div style="font-size:12px;font-weight:500;color:#0F6E56">Live class leo — Saa 4 Jioni (10:00 AM)</div>
+      <div style="font-size:11px;color:#085041">Business English: Emails & Presentations</div>
+    </div>
+    <button class="btn btn-primary" style="font-size:11px" onclick="sendPrompt('Nionyeshe jinsi ya kuingia live class')">Jiunge sasa</button>
+  </div>
+
+  <div class="card-title" style="margin-bottom:8px">Endelea kusoma</div>
+  <div class="three-col" style="margin-bottom:10px">
+    <div class="lesson-card">
+      <div class="lesson-thumb">▶</div>
+      <div class="lesson-title">Spoken English: Basics</div>
+      <div class="lesson-meta">Somo 4 ya 10</div>
+      <div style="margin-top:6px;display:flex;align-items:center;gap:4px">
+        <div class="progress-bar"><div class="progress-fill" style="width:38%"></div></div>
+        <span style="font-size:10px;color:var(--color-text-tertiary)">38%</span>
+      </div>
+    </div>
+    <div class="lesson-card">
+      <div class="lesson-thumb">📝</div>
+      <div class="lesson-title">Business English</div>
+      <div class="lesson-meta">Somo 7 ya 12</div>
+      <div style="margin-top:6px;display:flex;align-items:center;gap:4px">
+        <div class="progress-bar"><div class="progress-fill" style="width:58%"></div></div>
+        <span style="font-size:10px;color:var(--color-text-tertiary)">58%</span>
+      </div>
+    </div>
+    <div class="lesson-card">
+      <div class="lesson-thumb">🔒</div>
+      <div class="lesson-title">IELTS Preparation</div>
+      <div class="lesson-meta">Haujalipia bado</div>
+      <div style="margin-top:6px"><button class="btn btn-primary" style="width:100%;font-size:10px">Lipia TSh 35,000</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-header"><div class="card-title" style="margin-bottom:0">Shughuli za hivi karibuni</div></div>
+    <div class="act-item">
+      <div class="avatar av-g">✓</div>
+      <div><div style="font-size:12px">Uliongeza Somo 6: "Presenting Ideas"</div><div style="font-size:10px;color:var(--color-text-tertiary)">Leo, saa 9 asubuhi</div></div>
+    </div>
+    <div class="act-item">
+      <div class="avatar av-b">★</div>
+      <div><div style="font-size:12px">Quiz ya somo 5 — Umefaulu (80%)</div><div style="font-size:10px;color:var(--color-text-tertiary)">Jana</div></div>
+    </div>
+    <div class="act-item">
+      <div class="avatar av-a">$</div>
+      <div><div style="font-size:12px">Malipo ya TSh 25,000 yamekamilika — M-Pesa</div><div style="font-size:10px;color:var(--color-text-tertiary)">Tarehe 20 Apr</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- S: COURSES -->
+<div class="page" id="s-courses">
+  <div class="page-title">Kozi zangu</div>
+  <div class="card">
+    <div class="section-header">
+      <div class="card-title" style="margin-bottom:0">Kozi zinazoendela</div>
+      <button class="btn" onclick="sendPrompt('Nionyeshe orodha ya kozi zote zinazopatikana za Jackie')">Nunua kozi mpya ↗</button>
+    </div>
+    <div class="row">
+      <div class="avatar av-g">E</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">Spoken English: Beginners to Intermediate</div>
+        <div style="font-size:10px;color:var(--color-text-tertiary)">Masomo 4/10 · Muda: 4h 30min</div>
+      </div>
+      <div class="progress-bar" style="max-width:80px"><div class="progress-fill" style="width:38%"></div></div>
+      <span class="pill pill-green">Active</span>
+    </div>
+    <div class="row">
+      <div class="avatar av-b">B</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">Business English: Emails & Presentations</div>
+        <div style="font-size:10px;color:var(--color-text-tertiary)">Masomo 7/12 · Muda: 6h 15min</div>
+      </div>
+      <div class="progress-bar" style="max-width:80px"><div class="progress-fill" style="width:58%"></div></div>
+      <span class="pill pill-green">Active</span>
+    </div>
+    <div class="row">
+      <div class="avatar av-a">I</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">IELTS Preparation Course</div>
+        <div style="font-size:10px;color:var(--color-text-tertiary)">Haujalipia</div>
+      </div>
+      <div></div>
+      <span class="pill pill-amber">Locked</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Masomo inayosubiri — Spoken English</div>
+    <div class="row"><div style="font-size:12px">Somo 5: Daily Conversations</div><span class="pill pill-green">Completed</span></div>
+    <div class="row"><div style="font-size:12px">Somo 6: Asking for Directions</div><span class="pill pill-blue">In progress</span></div>
+    <div class="row"><div style="font-size:12px">Somo 7: Shopping & Haggling</div><span class="pill pill-gray">Locked</span></div>
+    <div class="row"><div style="font-size:12px">Somo 8: At the Airport</div><span class="pill pill-gray">Locked</span></div>
+  </div>
+</div>
+
+<!-- S: LIVE -->
+<div class="page" id="s-live">
+  <div class="page-title">Live classes</div>
+  <div class="live-card">
+    <div class="live-dot"></div>
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:500;color:#0F6E56">Leo — Saa 4 Jioni</div>
+      <div style="font-size:11px;color:#085041">Business English: Emails & Presentations · na Jackie</div>
+    </div>
+    <button class="btn btn-primary" onclick="sendPrompt('Nionyeshe jinsi Jitsi live class inavyofanya kazi kwenye LMS')">Jiunge ↗</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Ratiba ya wiki hii</div>
+    <div class="row"><div class="avatar av-g">J</div><div style="flex:1"><div style="font-size:12px;font-weight:500">Spoken English — Pronunciation</div><div style="font-size:10px;color:var(--color-text-tertiary)">Jumatano, Saa 4 Jioni</div></div><span class="pill pill-green">Umewekwa</span></div>
+    <div class="row"><div class="avatar av-b">J</div><div style="flex:1"><div style="font-size:12px;font-weight:500">Business Writing Q&A</div><div style="font-size:10px;color:var(--color-text-tertiary)">Ijumaa, Saa 5 Jioni</div></div><span class="pill pill-blue">Ijayo</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Classes zilizopita (recordings)</div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Grammar Masterclass — Apr 18</div><div style="font-size:10px;color:var(--color-text-tertiary)">Muda: 52 dakika</div></div><button class="btn" style="font-size:10px">Tazama recording</button></div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Speaking Practice — Apr 15</div><div style="font-size:10px;color:var(--color-text-tertiary)">Muda: 45 dakika</div></div><button class="btn" style="font-size:10px">Tazama recording</button></div>
+  </div>
+</div>
+
+<!-- S: TASKS -->
+<div class="page" id="s-tasks">
+  <div class="page-title">Kazi zangu</div>
+  <div class="card">
+    <div class="card-title">Zinasubiri kukamilishwa</div>
+    <div class="quiz-item">
+      <div class="avatar av-a">!</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">Assignment: Write a formal email</div><div style="font-size:10px;color:var(--color-text-tertiary)">Muda wa kumaliza: Kesho</div></div>
+      <span class="pill pill-amber">Pending</span>
+    </div>
+    <div class="quiz-item">
+      <div class="avatar av-a">!</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">Quiz: Somo 6 — Prepositions</div><div style="font-size:10px;color:var(--color-text-tertiary)">Muda wa kumaliza: Jumanne</div></div>
+      <span class="pill pill-amber">Pending</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Zilizokamilishwa</div>
+    <div class="row"><div class="avatar av-g">✓</div><div style="flex:1"><div style="font-size:12px">Quiz: Somo 5 — Tenses</div><div style="font-size:10px;color:var(--color-text-tertiary)">Alama: 80/100</div></div><span class="pill pill-green">80%</span></div>
+    <div class="row"><div class="avatar av-g">✓</div><div style="flex:1"><div style="font-size:12px">Assignment: Introduce yourself</div><div style="font-size:10px;color:var(--color-text-tertiary)">Jackie aliangalia: Nzuri sana!</div></div><span class="pill pill-green">92%</span></div>
+  </div>
+</div>
+
+<!-- S: PROGRESS -->
+<div class="page" id="s-progress">
+  <div class="page-title">Maendeleo yangu</div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Masomo yaliyokamilika</div><div class="metric-val green">11</div><div class="metric-sub">kati ya 22</div></div>
+    <div class="metric"><div class="metric-label">Alama ya wastani</div><div class="metric-val">86%</div><div class="metric-sub">quiz zote</div></div>
+    <div class="metric"><div class="metric-label">Live classes</div><div class="metric-val">5</div><div class="metric-sub">ulihudhuria</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Maendeleo kwa kozi</div>
+    <div class="bar-row"><div class="bar-label">Spoken English</div><div class="bar-bg"><div class="bar-fill" style="width:38%"></div></div><div class="bar-val">38%</div></div>
+    <div class="bar-row"><div class="bar-label">Business English</div><div class="bar-bg"><div class="bar-fill" style="width:58%"></div></div><div class="bar-val">58%</div></div>
+    <div class="bar-row"><div class="bar-label">IELTS Prep</div><div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div><div class="bar-val">0%</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Alama za quiz</div>
+    <div class="row"><div style="flex:1;font-size:12px">Quiz 1 — Basic Greetings</div><span class="pill pill-green">95%</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">Quiz 2 — Present Tense</div><span class="pill pill-green">88%</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">Quiz 3 — Past Tense</div><span class="pill pill-green">80%</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">Quiz 4 — Prepositions</div><span class="pill pill-amber">Haujafanya</span></div>
+  </div>
+</div>
+
+<!-- S: CERTIFICATES -->
+<div class="page" id="s-cert">
+  <div class="page-title">Vyeti vyangu</div>
+  <div class="cert-card">
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">Kozi: Business English</div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:2px">Certificate of Completion</div>
+    <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:8px">Itapatikana ukimaliza kozi yote</div>
+    <div style="display:flex;align-items:center;gap:4px;justify-content:center">
+      <div class="progress-bar" style="max-width:120px"><div class="progress-fill" style="width:58%"></div></div>
+      <span style="font-size:11px;color:var(--color-text-secondary)">58% imekamilika</span>
+    </div>
+  </div>
+  <div class="card" style="text-align:center;padding:20px">
+    <div style="font-size:12px;color:var(--color-text-secondary)">Bado hujapata vyeti. Kamilisha kozi kupata vyeti vya digital unavyoweza kushiriki LinkedIn.</div>
+  </div>
+</div>
+
+<!-- S: PAYMENT -->
+<div class="page" id="s-payment">
+  <div class="page-title">Malipo na Subscription</div>
+  <div class="sub-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-size:13px;font-weight:500">Subscription ya sasa</div>
+      <span class="pill pill-green">Active</span>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">Inaisha: Mei 13, 2025 (siku 18 zimebaki)</div>
+    <div style="font-size:12px;color:var(--color-text-secondary)">Kozi zilizojumuishwa: Spoken English + Business English</div>
+    <button class="btn btn-primary" style="margin-top:8px;font-size:11px" onclick="sendPrompt('Nionyeshe jinsi ya kuongeza subscription yangu')">Ongeza mwezi mwingine — TSh 25,000</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Historia ya malipo</div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Subscription — Aprili 2025</div><div style="font-size:10px;color:var(--color-text-tertiary)">M-Pesa · Vodacom</div></div><span class="pill pill-green">TSh 25,000</span></div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Subscription — Machi 2025</div><div style="font-size:10px;color:var(--color-text-tertiary)">HaloPesa · Halotel</div></div><span class="pill pill-green">TSh 25,000</span></div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Subscription — Februari 2025</div><div style="font-size:10px;color:var(--color-text-tertiary)">M-Pesa · Vodacom</div></div><span class="pill pill-green">TSh 25,000</span></div>
+  </div>
+</div>
+
+<!-- S: SETTINGS -->
+<div class="page" id="s-settings">
+  <div class="page-title">Mipangilio ya akaunti</div>
+  <div class="card">
+    <div class="card-title">Taarifa zangu</div>
+    <div class="input-row"><label>Jina</label><input class="inp" value="Amina Hassan" type="text"></div>
+    <div class="input-row"><label>Simu</label><input class="inp" value="+255 712 345 678" type="text"></div>
+    <div class="input-row"><label>Email</label><input class="inp" value="amina@gmail.com" type="text"></div>
+    <div style="margin-top:8px;display:flex;gap:8px"><button class="btn btn-primary">Hifadhi mabadiliko</button></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Notifications</div>
+    <div class="row"><div style="flex:1;font-size:12px">SMS reminder — siku 3 kabla subscription kuisha</div><span class="pill pill-green">Imewashwa</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">SMS — live class ijayo</div><span class="pill pill-green">Imewashwa</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">SMS — kazi mpya</div><span class="pill pill-green">Imewashwa</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Video quality</div>
+    <div class="row"><div style="flex:1;font-size:12px">Ubora wa video (data chache)</div><select class="inp" style="max-width:100px"><option>360p</option><option selected>480p</option><option>720p</option></select></div>
+  </div>
+</div>
+
+<!-- ======= ADMIN PAGES ======= -->
+
+<!-- A: HOME -->
+<div class="page" id="a-home">
+  <div class="page-title">Admin — Overview ya Leo</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+    <div class="admin-stat"><div class="stat-big" style="color:#1D9E75">127</div><div class="stat-lbl">Wanafunzi wanaolipa</div></div>
+    <div class="admin-stat"><div class="stat-big">TSh 3.2M</div><div class="stat-lbl">Mapato mwezi huu</div></div>
+    <div class="admin-stat"><div class="stat-big" style="color:#854F0B">12</div><div class="stat-lbl">Zinaisha wiki hii</div></div>
+    <div class="admin-stat"><div class="stat-big">89%</div><div class="stat-lbl">Renewal rate</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Mapato — Wiki hii</div>
+      <div class="revenue-bar-row">
+        <div style="flex:1;text-align:center"><div class="rev-bar" style="height:40%"></div><div class="rev-lbl">Jtn</div></div>
+        <div style="flex:1;text-align:center"><div class="rev-bar" style="height:70%"></div><div class="rev-lbl">Jma</div></div>
+        <div style="flex:1;text-align:center"><div class="rev-bar" style="height:55%"></div><div class="rev-lbl">Jtn</div></div>
+        <div style="flex:1;text-align:center"><div class="rev-bar" style="height:90%"></div><div class="rev-lbl">Alh</div></div>
+        <div style="flex:1;text-align:center"><div class="rev-bar" style="height:65%"></div><div class="rev-lbl">Ij</div></div>
+        <div style="flex:1;text-align:center"><div class="rev-bar" style="height:80%"></div><div class="rev-lbl">Jmo</div></div>
+        <div style="flex:1;text-align:center"><div class="rev-bar" style="height:45%"></div><div class="rev-lbl">Jp</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:4px">TSh 820,000 wiki hii</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Shughuli za hivi karibuni</div>
+      <div class="notif-item"><div class="notif-dot" style="background:#1D9E75"></div><div><div class="notif-txt">Farida Juma alilipia TSh 35,000 — IELTS</div><div class="notif-time">Dakika 5 zilizopita</div></div></div>
+      <div class="notif-item"><div class="notif-dot" style="background:#378ADD"></div><div><div class="notif-txt">Mwanafunzi mpya: Hassan Mwita amejisajili</div><div class="notif-time">Saa 1 iliyopita</div></div></div>
+      <div class="notif-item"><div class="notif-dot" style="background:#854F0B"></div><div><div class="notif-txt">Subscription ya Zawadi Ali inaisha kesho</div><div class="notif-time">Saa 2 ziliyopita</div></div></div>
+      <div class="notif-item"><div class="notif-dot" style="background:#1D9E75"></div><div><div class="notif-txt">Ali Hassan alimaliza kozi — Business English</div><div class="notif-time">Saa 3 ziliyopita</div></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-header"><div class="card-title" style="margin-bottom:0">Wanafunzi wapya wa leo</div><button class="btn" onclick="showPage('a-students')">Ona wote →</button></div>
+    <table class="tbl">
+      <tr><th>Mwanafunzi</th><th>Kozi</th><th>Mtandao</th><th>Kiasi</th><th>Hali</th></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:6px"><div class="user-avatar av-g">FJ</div> Farida Juma</div></td><td>IELTS Prep</td><td>M-Pesa</td><td>TSh 35,000</td><td><span class="pill pill-green">Active</span></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:6px"><div class="user-avatar av-b">HM</div> Hassan Mwita</div></td><td>Spoken English</td><td>Airtel</td><td>TSh 25,000</td><td><span class="pill pill-green">Active</span></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:6px"><div class="user-avatar av-a">ZA</div> Zawadi Ali</div></td><td>Business English</td><td>HaloPesa</td><td>TSh 25,000</td><td><span class="pill pill-amber">Inaisha</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- A: STUDENTS -->
+<div class="page" id="a-students">
+  <div class="page-title">Usimamizi wa Wanafunzi</div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <input class="inp" placeholder="Tafuta mwanafunzi..." style="flex:1;font-size:12px">
+    <select class="inp" style="width:130px;font-size:11px"><option>Hali yote</option><option>Active</option><option>Expired</option><option>Suspended</option></select>
+    <select class="inp" style="width:130px;font-size:11px"><option>Kozi zote</option><option>Spoken English</option><option>Business English</option><option>IELTS</option></select>
+    <button class="btn btn-primary" style="font-size:11px" onclick="sendPrompt('Nionyeshe jinsi ya kuexport orodha ya wanafunzi')">Export CSV</button>
+  </div>
+  <div class="card" style="padding:0">
+    <table class="tbl" style="width:100%">
+      <tr><th style="padding:8px 10px">Mwanafunzi</th><th>Kozi</th><th>Mtandao</th><th>Subscription</th><th>Hali</th><th>Actions</th></tr>
+      <tr><td style="padding:7px 10px"><div style="display:flex;align-items:center;gap:6px"><div class="user-avatar av-g">AM</div><div><div style="font-size:12px;font-weight:500">Amina Hassan</div><div style="font-size:10px;color:var(--color-text-tertiary)">+255 712 345 678</div></div></div></td><td><span style="font-size:11px">Spoken + Business</span></td><td><span class="pill pill-green">M-Pesa</span></td><td><span style="font-size:11px">Siku 18 zimebaki</span></td><td><span class="pill pill-green">Active</span></td><td><div style="display:flex;gap:4px"><button class="btn" style="font-size:10px;padding:3px 7px">Ona</button><button class="btn btn-danger" style="font-size:10px;padding:3px 7px">Simamisha</button></div></td></tr>
+      <tr><td style="padding:7px 10px"><div style="display:flex;align-items:center;gap:6px"><div class="user-avatar av-b">HM</div><div><div style="font-size:12px;font-weight:500">Hassan Mwita</div><div style="font-size:10px;color:var(--color-text-tertiary)">+255 765 432 100</div></div></div></td><td><span style="font-size:11px">Spoken English</span></td><td><span class="pill pill-blue">Airtel</span></td><td><span style="font-size:11px">Siku 25 zimebaki</span></td><td><span class="pill pill-green">Active</span></td><td><div style="display:flex;gap:4px"><button class="btn" style="font-size:10px;padding:3px 7px">Ona</button><button class="btn btn-danger" style="font-size:10px;padding:3px 7px">Simamisha</button></div></td></tr>
+      <tr><td style="padding:7px 10px"><div style="display:flex;align-items:center;gap:6px"><div class="user-avatar av-a">ZA</div><div><div style="font-size:12px;font-weight:500">Zawadi Ali</div><div style="font-size:10px;color:var(--color-text-tertiary)">+255 688 999 111</div></div></div></td><td><span style="font-size:11px">Business English</span></td><td><span class="pill pill-amber">HaloPesa</span></td><td><span style="font-size:11px;color:#A32D2D">Kesho inaisha!</span></td><td><span class="pill pill-amber">Karibu kuisha</span></td><td><div style="display:flex;gap:4px"><button class="btn" style="font-size:10px;padding:3px 7px">Ona</button><button class="btn btn-primary" style="font-size:10px;padding:3px 7px">Tuma SMS</button></div></td></tr>
+      <tr><td style="padding:7px 10px"><div style="display:flex;align-items:center;gap:6px"><div class="user-avatar av-p">FJ</div><div><div style="font-size:12px;font-weight:500">Farida Juma</div><div style="font-size:10px;color:var(--color-text-tertiary)">+255 711 222 333</div></div></div></td><td><span style="font-size:11px">IELTS Prep</span></td><td><span class="pill pill-green">M-Pesa</span></td><td><span style="font-size:11px">Siku 30 zimebaki</span></td><td><span class="pill pill-green">Active</span></td><td><div style="display:flex;gap:4px"><button class="btn" style="font-size:10px;padding:3px 7px">Ona</button><button class="btn btn-danger" style="font-size:10px;padding:3px 7px">Simamisha</button></div></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- A: REVENUE -->
+<div class="page" id="a-revenue">
+  <div class="page-title">Usimamizi wa Mapato</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+    <div class="admin-stat"><div class="stat-big" style="color:#1D9E75">TSh 3.2M</div><div class="stat-lbl">Mwezi huu</div></div>
+    <div class="admin-stat"><div class="stat-big">TSh 2.8M</div><div class="stat-lbl">Mwezi uliopita</div></div>
+    <div class="admin-stat"><div class="stat-big" style="color:#1D9E75">+14%</div><div class="stat-lbl">Ongezeko</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Mapato kwa mtandao wa malipo</div>
+    <div class="bar-row"><div class="bar-label">M-Pesa</div><div class="bar-bg"><div class="bar-fill" style="width:65%"></div></div><div class="bar-val">65%</div></div>
+    <div class="bar-row"><div class="bar-label">Airtel Money</div><div class="bar-bg"><div class="bar-fill" style="width:18%"></div></div><div class="bar-val">18%</div></div>
+    <div class="bar-row"><div class="bar-label">HaloPesa</div><div class="bar-bg"><div class="bar-fill" style="width:12%"></div></div><div class="bar-val">12%</div></div>
+    <div class="bar-row"><div class="bar-label">Kadi</div><div class="bar-bg"><div class="bar-fill" style="width:5%"></div></div><div class="bar-val">5%</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Mapato kwa kozi</div>
+    <div class="bar-row"><div class="bar-label">Business English</div><div class="bar-bg"><div class="bar-fill" style="width:48%"></div></div><div class="bar-val">TSh 1.5M</div></div>
+    <div class="bar-row"><div class="bar-label">Spoken English</div><div class="bar-bg"><div class="bar-fill" style="width:35%"></div></div><div class="bar-val">TSh 1.1M</div></div>
+    <div class="bar-row"><div class="bar-label">IELTS Prep</div><div class="bar-bg"><div class="bar-fill" style="width:17%"></div></div><div class="bar-val">TSh 550k</div></div>
+  </div>
+</div>
+
+<!-- A: COURSES -->
+<div class="page" id="a-courses">
+  <div class="page-title">Usimamizi wa Kozi</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+    <button class="btn btn-primary" onclick="sendPrompt('Nionyeshe jinsi ya kuunda kozi mpya kwenye LMS')">+ Ongeza kozi mpya</button>
+  </div>
+  <div class="card">
+    <div class="row">
+      <div class="avatar av-g">S</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">Spoken English: Beginners</div><div style="font-size:10px;color:var(--color-text-tertiary)">Masomo 10 · Wanafunzi 54 · TSh 25,000/mwezi</div></div>
+      <div style="display:flex;gap:4px"><button class="btn" style="font-size:10px;padding:3px 7px">Hariri</button><button class="btn" style="font-size:10px;padding:3px 7px">Masomo</button><span class="pill pill-green">Published</span></div>
+    </div>
+    <div class="row">
+      <div class="avatar av-b">B</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">Business English</div><div style="font-size:10px;color:var(--color-text-tertiary)">Masomo 12 · Wanafunzi 48 · TSh 25,000/mwezi</div></div>
+      <div style="display:flex;gap:4px"><button class="btn" style="font-size:10px;padding:3px 7px">Hariri</button><button class="btn" style="font-size:10px;padding:3px 7px">Masomo</button><span class="pill pill-green">Published</span></div>
+    </div>
+    <div class="row">
+      <div class="avatar av-a">I</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">IELTS Preparation</div><div style="font-size:10px;color:var(--color-text-tertiary)">Masomo 15 · Wanafunzi 25 · TSh 35,000/mwezi</div></div>
+      <div style="display:flex;gap:4px"><button class="btn" style="font-size:10px;padding:3px 7px">Hariri</button><button class="btn" style="font-size:10px;padding:3px 7px">Masomo</button><span class="pill pill-green">Published</span></div>
+    </div>
+    <div class="row">
+      <div class="avatar av-p">G</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">Grammar Intensive (Draft)</div><div style="font-size:10px;color:var(--color-text-tertiary)">Masomo 0 · Haijaandaliwa</div></div>
+      <div style="display:flex;gap:4px"><button class="btn" style="font-size:10px;padding:3px 7px">Hariri</button><button class="btn btn-primary" style="font-size:10px;padding:3px 7px">Publish</button><span class="pill pill-gray">Draft</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- A: LIVE ADMIN -->
+<div class="page" id="a-live">
+  <div class="page-title">Usimamizi wa Live Classes</div>
+  <button class="btn btn-primary" style="margin-bottom:12px" onclick="sendPrompt('Nionyeshe jinsi ya kuunda live class mpya na Jitsi')">+ Unda live class mpya</button>
+  <div class="live-card">
+    <div class="live-dot"></div>
+    <div style="flex:1"><div style="font-size:12px;font-weight:500;color:#0F6E56">Inakuja leo — Saa 4 Jioni</div><div style="font-size:11px;color:#085041">Business English: Emails · Wanafunzi 48 wametaarifiwa</div></div>
+    <div style="display:flex;gap:4px"><button class="btn" style="font-size:10px">Hariri</button><button class="btn btn-primary" style="font-size:10px">Anza class</button></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Ratiba ya wiki hii</div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px;font-weight:500">Spoken English — Pronunciation</div><div style="font-size:10px;color:var(--color-text-tertiary)">Jumatano Saa 4 · Wanafunzi 54</div></div><div style="display:flex;gap:4px"><button class="btn" style="font-size:10px">Hariri</button><button class="btn btn-danger" style="font-size:10px">Futa</button></div></div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px;font-weight:500">Business Writing Q&A</div><div style="font-size:10px;color:var(--color-text-tertiary)">Ijumaa Saa 5 · Wanafunzi 48</div></div><div style="display:flex;gap:4px"><button class="btn" style="font-size:10px">Hariri</button><button class="btn btn-danger" style="font-size:10px">Futa</button></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Recordings za classes zilizopita</div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Grammar Masterclass — Apr 18</div><div style="font-size:10px;color:var(--color-text-tertiary)">Walihudhuria: 31 · Muda: 52 min</div></div><div style="display:flex;gap:4px"><button class="btn" style="font-size:10px">Ona</button><button class="btn btn-danger" style="font-size:10px">Futa</button></div></div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Speaking Practice — Apr 15</div><div style="font-size:10px;color:var(--color-text-tertiary)">Walihudhuria: 27 · Muda: 45 min</div></div><div style="display:flex;gap:4px"><button class="btn" style="font-size:10px">Ona</button><button class="btn btn-danger" style="font-size:10px">Futa</button></div></div>
+  </div>
+</div>
+
+<!-- A: TASKS/GRADES -->
+<div class="page" id="a-tasks">
+  <div class="page-title">Kazi za Wanafunzi & Grading</div>
+  <div class="card">
+    <div class="section-header"><div class="card-title" style="margin-bottom:0">Zinasubiri usahihishaji</div><span class="pill pill-amber">8 zinasubiri</span></div>
+    <div class="row"><div class="avatar av-a">!</div><div style="flex:1"><div style="font-size:12px;font-weight:500">Amina Hassan — Write a formal email</div><div style="font-size:10px;color:var(--color-text-tertiary)">Imewasilishwa: Leo asubuhi</div></div><button class="btn btn-primary" style="font-size:10px">Sahihisha ↗</button></div>
+    <div class="row"><div class="avatar av-a">!</div><div style="flex:1"><div style="font-size:12px;font-weight:500">Hassan Mwita — Introduce yourself (recording)</div><div style="font-size:10px;color:var(--color-text-tertiary)">Imewasilishwa: Jana</div></div><button class="btn btn-primary" style="font-size:10px">Sahihisha ↗</button></div>
+    <div class="row"><div class="avatar av-a">!</div><div style="flex:1"><div style="font-size:12px;font-weight:500">Farida Juma — IELTS Writing Task 1</div><div style="font-size:10px;color:var(--color-text-tertiary)">Imewasilishwa: Jana</div></div><button class="btn btn-primary" style="font-size:10px">Sahihisha ↗</button></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Zilizosahihishwa hivi karibuni</div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Zawadi Ali — Grammar Quiz</div><div style="font-size:10px;color:var(--color-text-tertiary)">Umesahihisha Apr 22</div></div><span class="pill pill-green">92%</span></div>
+    <div class="row"><div style="flex:1"><div style="font-size:12px">Amina Hassan — Speaking Task</div><div style="font-size:10px;color:var(--color-text-tertiary)">Umesahihisha Apr 21</div></div><span class="pill pill-green">80%</span></div>
+  </div>
+</div>
+
+<!-- A: PAYMENTS ADMIN -->
+<div class="page" id="a-payments">
+  <div class="page-title">Usimamizi wa Malipo</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+    <div class="admin-stat"><div class="stat-big" style="color:#1D9E75">143</div><div class="stat-lbl">Malipo mwezi huu</div></div>
+    <div class="admin-stat"><div class="stat-big" style="color:#854F0B">12</div><div class="stat-lbl">Subscriptions zinaisha</div></div>
+    <div class="admin-stat"><div class="stat-big" style="color:#A32D2D">3</div><div class="stat-lbl">Malipo yaliyoshindwa</div></div>
+  </div>
+  <div class="card" style="padding:0">
+    <div style="padding:10px 14px 6px"><div class="card-title" style="margin-bottom:0">Malipo ya hivi karibuni</div></div>
+    <table class="tbl" style="width:100%">
+      <tr><th style="padding:6px 10px">Mwanafunzi</th><th>Kiasi</th><th>Mtandao</th><th>Kozi</th><th>Hali</th></tr>
+      <tr><td style="padding:6px 10px;font-size:12px">Farida Juma</td><td style="font-size:12px">TSh 35,000</td><td><span class="pill pill-green">M-Pesa</span></td><td style="font-size:11px">IELTS</td><td><span class="pill pill-green">Imefanikiwa</span></td></tr>
+      <tr><td style="padding:6px 10px;font-size:12px">Hassan Mwita</td><td style="font-size:12px">TSh 25,000</td><td><span class="pill pill-blue">Airtel</span></td><td style="font-size:11px">Spoken</td><td><span class="pill pill-green">Imefanikiwa</span></td></tr>
+      <tr><td style="padding:6px 10px;font-size:12px">Juma Kasim</td><td style="font-size:12px">TSh 25,000</td><td><span class="pill pill-amber">HaloPesa</span></td><td style="font-size:11px">Business</td><td><span class="pill pill-red">Imeshindwa</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- A: NOTIF ADMIN -->
+<div class="page" id="a-notif">
+  <div class="page-title">Usimamizi wa Notifications</div>
+  <div class="card">
+    <div class="card-title">Tuma ujumbe kwa wanafunzi</div>
+    <div class="input-row" style="margin-bottom:6px"><label>Wapokeaji</label><select class="inp"><option>Wanafunzi wote (127)</option><option>Spoken English tu</option><option>Business English tu</option><option>Zinaisha wiki hii</option></select></div>
+    <div class="input-row"><label>Njia</label><select class="inp"><option>SMS</option><option>Email</option><option>SMS + Email</option></select></div>
+    <textarea class="inp" style="width:100%;height:60px;resize:none;margin-bottom:8px;font-size:11px" placeholder="Andika ujumbe hapa..."></textarea>
+    <button class="btn btn-primary" onclick="sendPrompt('Nionyeshe jinsi SMS ya bulk inavyotumwa kwa wanafunzi')">Tuma ujumbe ↗</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Auto-notifications zilizowashwa</div>
+    <div class="row"><div style="flex:1;font-size:12px">SMS reminder siku 3 kabla subscription kuisha</div><span class="pill pill-green">Imewashwa</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">SMS baada ya malipo kukamilika</div><span class="pill pill-green">Imewashwa</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">SMS live class saa 2 kabla</div><span class="pill pill-green">Imewashwa</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">SMS ukikuwa na kazi mpya</div><span class="pill pill-green">Imewashwa</span></div>
+    <div class="row"><div style="flex:1;font-size:12px">SMS subscription imeisha</div><span class="pill pill-amber">Imezimwa</span></div>
+  </div>
+</div>
+
+<!-- A: SETTINGS ADMIN -->
+<div class="page" id="a-settings">
+  <div class="page-title">Settings ya Mfumo</div>
+  <div class="card">
+    <div class="card-title">Taarifa za platform</div>
+    <div class="input-row"><label>Jina la LMS</label><input class="inp" value="JackieEnglish LMS" type="text"></div>
+    <div class="input-row"><label>Sarafu</label><select class="inp"><option selected>TZS (TSh)</option><option>KES</option><option>USD</option></select></div>
+    <button class="btn btn-primary" style="margin-top:4px">Hifadhi</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Payment gateway</div>
+    <div class="input-row"><label>Aggregator</label><select class="inp"><option selected>Selcom</option><option>PesaPal</option><option>AzamPay</option></select></div>
+    <div class="input-row"><label>API Key</label><input class="inp" value="sk_live_••••••••••••" type="password"></div>
+    <div class="input-row"><label>Webhook URL</label><input class="inp" value="/webhook/selcom" type="text"></div>
+    <button class="btn btn-primary" style="margin-top:4px">Test connection</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Video hosting</div>
+    <div class="input-row"><label>Provider</label><select class="inp"><option selected>Cloudflare Stream</option><option>Bunny.net</option><option>Vimeo</option></select></div>
+    <div class="input-row"><label>API Token</label><input class="inp" value="cf_••••••••••••" type="password"></div>
+    <button class="btn btn-primary" style="margin-top:4px">Hifadhi</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Subscription control</div>
+    <div class="input-row"><label>Muda wa default</label><select class="inp"><option>Wiki 2</option><option selected>Mwezi 1</option><option>Miezi 3</option></select></div>
+    <div class="input-row"><label>Grace period</label><select class="inp"><option>Hakuna</option><option selected>Siku 1</option><option>Siku 3</option></select></div>
+    <button class="btn btn-primary" style="margin-top:4px">Hifadhi</button>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+var currentView = 'student';
+
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.sw').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('student-nav').style.display = view === 'student' ? 'block' : 'none';
+  document.getElementById('admin-nav').style.display = view === 'admin' ? 'block' : 'none';
+  document.getElementById('view-label').textContent = view === 'student' ? 'Mwanafunzi: Amina Hassan' : 'Admin: Jackie Malvis';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(view === 'student' ? 's-home' : 'a-home').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector('#' + view + '-nav .nav-item').classList.add('active');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  var navId = currentView === 'student' ? 'student-nav' : 'admin-nav';
+  document.querySelectorAll('#' + navId + ' .nav-item').forEach(n => n.classList.remove('active'));
+  event.target.closest('.nav-item').classList.add('active');
+}
+</script>

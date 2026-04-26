@@ -1,0 +1,159 @@
+@import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css";
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans:
+        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+
+    /* Base neutral palette (kept for compatibility with Flux) */
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    /* System brand colors (Ivory / Smoke / Terra) */
+    --color-ivory: #eeebd9; /* primary warm background */
+    --color-smoke: #282427; /* dark text / headers */
+    --color-terra: #bc6c25; /* primary accent */
+
+    /* Map Flux/Tailwind semantic tokens to brand colors */
+    --color-accent: var(--color-terra);
+    --color-accent-content: var(--color-ivory);
+    --color-accent-foreground: var(--color-ivory);
+
+    /* Accessibility fallbacks */
+    --color-accent-contrast: #ffffff;
+    --color-base-bg: var(--color-ivory);
+    --color-base-foreground: var(--color-smoke);
+}
+
+/* Glassmorphism variables & utilities
+   These are intentionally lightweight utilities that can be used
+   alongside Tailwind/Flux components. They use the brand trio
+   (Ivory / Smoke / Terra) to produce a premium glass effect.
+*/
+:root {
+    --glass-bg: rgba(238, 235, 217, 0.55); /* soft ivory glass */
+    --glass-bg-dark: rgba(40, 36, 39, 0.28); /* alternative for dark mode */
+    --glass-border: rgba(40, 36, 39, 0.08);
+    --glass-accent-border: rgba(188, 108, 37, 0.1); /* subtle terra tint */
+    --glass-blur: 12px;
+    --glass-shadow: 0 8px 30px rgba(40, 36, 39, 0.08);
+    --glass-elevated-shadow: 0 18px 50px rgba(40, 36, 39, 0.12);
+    --glass-radius: 0.75rem;
+}
+
+/* Component utilities for glassmorphism */
+@layer components {
+    .glass-card {
+        background: linear-gradient(
+            180deg,
+            var(--glass-bg),
+            rgba(255, 255, 255, 0.35)
+        );
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        border-radius: var(--glass-radius);
+        color: var(--color-smoke);
+    }
+
+    .glass-card--dark {
+        background: linear-gradient(
+            180deg,
+            rgba(40, 36, 39, 0.28),
+            rgba(40, 36, 39, 0.18)
+        );
+        border: 1px solid var(--glass-accent-border);
+        color: var(--color-ivory);
+    }
+
+    .glass-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.9rem;
+        border-radius: 0.5rem;
+        background: linear-gradient(
+            180deg,
+            var(--color-terra),
+            color-mix(in srgb, var(--color-terra) 70%, black 10%)
+        );
+        color: var(--color-ivory);
+        box-shadow: 0 8px 30px rgba(188, 108, 37, 0.18);
+        border: 1px solid rgba(188, 108, 37, 0.06);
+        font-weight: 600;
+    }
+
+    .glass-outline {
+        background: transparent;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(40, 36, 39, 0.06);
+        padding: 0.5rem 0.75rem;
+        color: var(--color-smoke);
+        backdrop-filter: blur(calc(var(--glass-blur) / 2));
+        -webkit-backdrop-filter: blur(calc(var(--glass-blur) / 2));
+    }
+
+    /* Small helpers */
+    .glass-soft-shadow {
+        box-shadow: var(--glass-shadow) !important;
+    }
+    .glass-elevated {
+        box-shadow: var(--glass-elevated-shadow) !important;
+    }
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-white);
+        --color-accent-foreground: var(--color-neutral-800);
+    }
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* \[:where(&)\]:size-4 {
+    @apply size-4;
+} */

@@ -1,0 +1,346 @@
+
+<style>
+:root { --gap: 12px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.section-title { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); letter-spacing: .06em; text-transform: uppercase; margin: 0 0 8px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; }
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
+.badge-green { background: var(--color-background-success); color: var(--color-text-success); }
+.badge-blue { background: var(--color-background-info); color: var(--color-text-info); }
+.badge-amber { background: var(--color-background-warning); color: var(--color-text-warning); }
+.badge-purple { background: #EEEDFE; color: #3C3489; }
+.layer { border-radius: var(--border-radius-lg); padding: 14px; margin-bottom: var(--gap); }
+.layer-label { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); letter-spacing:.05em; text-transform:uppercase; margin-bottom: 10px; }
+.box-grid { display: grid; gap: 8px; }
+.box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; cursor: pointer; transition: border-color .15s, background .15s; }
+.box:hover { border-color: var(--color-border-primary); background: var(--color-background-secondary); }
+.box-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+.box-sub { font-size: 11px; color: var(--color-text-secondary); }
+.icon { font-size: 14px; margin-bottom: 4px; }
+.arrow-row { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 2px 0; }
+.arrow-line { flex: 1; height: 0.5px; background: var(--color-border-secondary); max-width: 40px; }
+.arrow-txt { font-size: 10px; color: var(--color-text-tertiary); }
+.tab-bar { display: flex; gap: 4px; margin-bottom: 12px; }
+.tab { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; color: var(--color-text-secondary); transition: all .15s; }
+.tab.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: transparent; }
+.panel { display: none; }
+.panel.active { display: block; }
+.feature-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.feature-row:last-child { border-bottom: none; }
+.feature-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.dot-green { background: #1D9E75; }
+.dot-blue { background: #378ADD; }
+.dot-amber { background: #BA7517; }
+.dot-purple { background: #534AB7; }
+.feature-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.feature-desc { font-size: 11px; color: var(--color-text-secondary); margin-top: 1px; }
+.flow-step { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); flex-shrink: 0; }
+.step-content { flex: 1; }
+.step-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.step-sub { font-size: 11px; color: var(--color-text-secondary); }
+.step-badge { font-size: 10px; }
+.flow-arrow { text-align: center; color: var(--color-text-tertiary); font-size: 12px; padding: 1px 0; }
+.pay-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.pay-row:last-child { border-bottom: none; }
+.pay-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+.pay-name { font-size: 13px; font-weight: 500; }
+.pay-sub { font-size: 11px; color: var(--color-text-secondary); }
+</style>
+
+<div style="padding: 4px 0 16px;">
+  <div style="font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px;">English Learning Platform</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary);">System overview · Jackie Malvis LMS</div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab active" onclick="showPanel('arch')">Architecture</button>
+  <button class="tab" onclick="showPanel('admin')">Admin portal</button>
+  <button class="tab" onclick="showPanel('student')">Student portal</button>
+  <button class="tab" onclick="showPanel('payment')">Payments</button>
+  <button class="tab" onclick="showPanel('flow')">User flow</button>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="panel active" id="panel-arch">
+  <div class="layer" style="background: #E1F5EE; border: 0.5px solid #5DCAA5;">
+    <div class="layer-label" style="color:#0F6E56;">Frontend layer</div>
+    <div class="box-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="box" onclick="sendPrompt('Nieleze zaidi kuhusu Admin Dashboard ya LMS')">
+        <div class="box-title">Admin Dashboard</div>
+        <div class="box-sub">Jackie — kusimamia kozi, wanafunzi, mapato</div>
+      </div>
+      <div class="box" onclick="sendPrompt('Nieleze zaidi kuhusu Student Portal ya LMS')">
+        <div class="box-title">Student Portal</div>
+        <div class="box-sub">Mobile-first, video streaming, live class</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-row"><div class="arrow-line"></div><div class="arrow-txt">REST API / WebSocket</div><div class="arrow-line"></div></div>
+
+  <div class="layer" style="background: #E6F1FB; border: 0.5px solid #85B7EB;">
+    <div class="layer-label" style="color:#185FA5;">Backend layer · Node.js / Python</div>
+    <div class="box-grid" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="box" onclick="sendPrompt('Auth system ya LMS inafanyaje kazi?')">
+        <div class="box-title">Auth Service</div>
+        <div class="box-sub">OTP via SMS, session management</div>
+      </div>
+      <div class="box" onclick="sendPrompt('Course management system inafanyaje kazi?')">
+        <div class="box-title">Course Engine</div>
+        <div class="box-sub">Video progress, quizzes, certificates</div>
+      </div>
+      <div class="box" onclick="sendPrompt('Payment processing backend inafanyaje kazi?')">
+        <div class="box-title">Payment Service</div>
+        <div class="box-sub">Webhooks, subscription management</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-row"><div class="arrow-line"></div><div class="arrow-txt">API integrations</div><div class="arrow-line"></div></div>
+
+  <div class="layer" style="background: #FAEEDA; border: 0.5px solid #EF9F27;">
+    <div class="layer-label" style="color:#854F0B;">External integrations</div>
+    <div class="box-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+      <div class="box" onclick="sendPrompt('Selcom / PesaPal API integration inamaanisha nini?')">
+        <div class="box-title">Selcom / PesaPal</div>
+        <div class="box-sub">M-Pesa, Airtel, Tigo, HaloPesa</div>
+      </div>
+      <div class="box" onclick="sendPrompt('Cloudflare Stream ni nini na inatumika vipi?')">
+        <div class="box-title">Cloudflare Stream</div>
+        <div class="box-sub">Protected video hosting</div>
+      </div>
+      <div class="box" onclick="sendPrompt('Zoom API integration inamaanisha nini?')">
+        <div class="box-title">Zoom / Meet API</div>
+        <div class="box-sub">Live classes scheduling</div>
+      </div>
+      <div class="box" onclick="sendPrompt('SMS gateway inatumikaje kwa OTP na notifications?')">
+        <div class="box-title">SMS Gateway</div>
+        <div class="box-sub">OTP, reminders, alerts</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-row"><div class="arrow-line"></div><div class="arrow-txt">store / retrieve</div><div class="arrow-line"></div></div>
+
+  <div class="layer" style="background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary);">
+    <div class="layer-label">Database & storage</div>
+    <div class="box-grid" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="box">
+        <div class="box-title">PostgreSQL</div>
+        <div class="box-sub">Users, courses, payments</div>
+      </div>
+      <div class="box">
+        <div class="box-title">AWS S3 / GCS</div>
+        <div class="box-sub">Videos, PDFs, materials</div>
+      </div>
+      <div class="box">
+        <div class="box-title">Redis Cache</div>
+        <div class="box-sub">Sessions, live class state</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="panel" id="panel-admin">
+  <div class="card" style="margin-bottom: 10px;">
+    <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px; color: var(--color-text-primary);">Jackie anaona na kusimamia:</div>
+    <div class="feature-row">
+      <div class="feature-dot dot-blue"></div>
+      <div><div class="feature-name">Course Builder</div><div class="feature-desc">Pakia video, PDF, mazoezi (drag & drop). Weka bei na muda wa subscription.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-green"></div>
+      <div><div class="feature-name">Revenue Dashboard</div><div class="feature-desc">Real-time — fedha zilizoingia leo/wiki/mwezi. Charts na transaction history.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-amber"></div>
+      <div><div class="feature-name">Student Manager</div><div class="feature-desc">Orodha ya wanafunzi wote, hali ya malipo (active/expired), maendeleo yao.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-purple"></div>
+      <div><div class="feature-name">Live Class Scheduler</div><div class="feature-desc">Ratibu wakati wa Zoom/Meet. Mfumo unatuma SMS/notification kwa wanafunzi wote auto.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-blue"></div>
+      <div><div class="feature-name">Assignment Grading</div><div class="feature-desc">Ona majibu ya wanafunzi, toa feedback, weka alama za performance tasks.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-green"></div>
+      <div><div class="feature-name">Analytics & Reports</div><div class="feature-desc">Kozi zipi zinafanya vizuri, video zipi zinatazamwa zaidi, churn rate.</div></div>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <span class="badge badge-green">Auto subscription control</span>
+    <span class="badge badge-blue">No manual work</span>
+    <span class="badge badge-amber">Full business control</span>
+  </div>
+</div>
+
+<!-- STUDENT PANEL -->
+<div class="panel" id="panel-student">
+  <div class="card" style="margin-bottom:10px;">
+    <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px; color: var(--color-text-primary);">Mwanafunzi anapata:</div>
+    <div class="feature-row">
+      <div class="feature-dot dot-blue"></div>
+      <div><div class="feature-name">Simple Onboarding</div><div class="feature-desc">Jiandikishe kwa namba ya simu tu. Pata OTP → weka password → anza.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-green"></div>
+      <div><div class="feature-name">Mobile-First Dashboard</div><div class="feature-desc">Inaonekana vizuri kwenye simu yoyote. Hakuna app ya kudownload — browser tu.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-amber"></div>
+      <div><div class="feature-name">Video Lessons (On-Demand)</div><div class="feature-desc">Tazama masomo wakati wowote. Progress inakumbukwa. Video 360p/480p kwa data kidogo.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-purple"></div>
+      <div><div class="feature-name">Live Class Button</div><div class="feature-desc">Ingia Zoom/Meet moja kwa moja kutoka portal — bila kutafuta link nje.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-blue"></div>
+      <div><div class="feature-name">Quizzes & Tasks</div><div class="feature-desc">Baada ya kila video — mazoezi ya kujua uelewa. Performance tracking.</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-green"></div>
+      <div><div class="feature-name">Subscription Reminder</div><div class="feature-desc">SMS auto — siku 3 kabla ya subscription kuisha: "Bando lako linakwisha, lipia upya."</div></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot dot-amber"></div>
+      <div><div class="feature-name">Certificate of Completion</div><div class="feature-desc">Akimaliza kozi — anapata certificate PDF ya digital inayoweza kushirikiwa LinkedIn.</div></div>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <span class="badge badge-green">No app needed</span>
+    <span class="badge badge-blue">Works on any phone</span>
+    <span class="badge badge-amber">Low data mode</span>
+  </div>
+</div>
+
+<!-- PAYMENTS -->
+<div class="panel" id="panel-payment">
+  <div class="card" style="margin-bottom:10px;">
+    <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 10px;">Via Selcom / PesaPal aggregator — API moja, mitandao yote:</div>
+    <div class="pay-row">
+      <div class="pay-icon" style="background:#FFF0E6; color:#E65C00;">MP</div>
+      <div><div class="pay-name">M-Pesa (Vodacom)</div><div class="pay-sub">STK Push — mtumiaji anaingiza PIN tu</div></div>
+      <span class="badge badge-green" style="margin-left:auto;">Active</span>
+    </div>
+    <div class="pay-row">
+      <div class="pay-icon" style="background:#FFF0E6; color:#E83E2E;">AT</div>
+      <div><div class="pay-name">Airtel Money</div><div class="pay-sub">Push notification kwa Airtel users</div></div>
+      <span class="badge badge-green" style="margin-left:auto;">Active</span>
+    </div>
+    <div class="pay-row">
+      <div class="pay-icon" style="background:#E6F0FF; color:#0033CC;">TP</div>
+      <div><div class="pay-name">Tigo Pesa</div><div class="pay-sub">Ikiwa bado inafanya kazi (merger)</div></div>
+      <span class="badge badge-blue" style="margin-left:auto;">Via aggregator</span>
+    </div>
+    <div class="pay-row">
+      <div class="pay-icon" style="background:#E6FFF4; color:#00803B;">HP</div>
+      <div><div class="pay-name">HaloPesa</div><div class="pay-sub">Halotel network — aggregator inashughulikia</div></div>
+      <span class="badge badge-green" style="margin-left:auto;">Active</span>
+    </div>
+    <div class="pay-row">
+      <div class="pay-icon" style="background:#F3F0FF; color:#5533AA;">CC</div>
+      <div><div class="pay-name">Visa / Mastercard</div><div class="pay-sub">Kwa wanaotaka kulipa kwa kadi</div></div>
+      <span class="badge badge-blue" style="margin-left:auto;">Optional</span>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-size: 12px; font-weight: 500; margin-bottom: 6px;">Jinsi inavyofanya kazi:</div>
+    <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.7;">
+      1. Mwanafunzi achagua kozi na mtandao wake<br>
+      2. Mfumo unatuma <strong>STK Push</strong> kwenye simu yake<br>
+      3. Anaingiza PIN — malipo yanakamilika<br>
+      4. Selcom/PesaPal inatuma <strong>Webhook</strong> kwa backend yetu<br>
+      5. Backend inafungua access ya kozi <strong>papo hapo — automatic</strong>
+    </div>
+  </div>
+  <div style="margin-top:8px; font-size:11px; color:var(--color-text-secondary);">Commission: ~2.5–3.5% per transaction. Hakuna setup fee kubwa.</div>
+</div>
+
+<!-- USER FLOW -->
+<div class="panel" id="panel-flow">
+  <div class="card">
+    <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:10px;">Safari kamili ya mwanafunzi:</div>
+    <div class="flow-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-name">Ona landing page</div>
+        <div class="step-sub">Link kutoka bio ya Instagram/TikTok ya Jackie</div>
+      </div>
+      <span class="badge badge-blue">Website</span>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-name">Chagua kozi na bonyeza Enroll</div>
+        <div class="step-sub">Ona bei, muda, na nini atajifunza</div>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-name">Ingiza namba ya simu</div>
+        <div class="step-sub">Chagua mtandao: M-Pesa / Airtel / HaloPesa</div>
+      </div>
+      <span class="badge badge-amber">Payment</span>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-name">Pokea STK Push — ingiza PIN</div>
+        <div class="step-sub">Inatulia ndani ya sekunde 30</div>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-name">Dashboard inafunguka auto</div>
+        <div class="step-sub">Jackie hashiriki — mfumo unafanya kila kitu</div>
+      </div>
+      <span class="badge badge-green">Auto access</span>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <div class="step-name">Anza kujifunza — video, live class, quizzes</div>
+        <div class="step-sub">Anaweza kurudi wakati wowote</div>
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <div class="step-name">SMS reminder siku 3 kabla ya mwisho</div>
+        <div class="step-sub">Bando la subscription linakwisha — lipia upya</div>
+      </div>
+      <span class="badge badge-amber">Auto SMS</span>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">
+      <div class="step-num">8</div>
+      <div class="step-content">
+        <div class="step-name">Bando liisha — access inafungwa auto</div>
+        <div class="step-sub">Akilipa tena, inafunguka papo hapo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
