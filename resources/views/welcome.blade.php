@@ -311,11 +311,13 @@
 
                 <div class="hero-visual-wrap reveal" style="transition-delay:.15s">
                     <div class="glass-card glass-elevated p-3" style="border-radius:1.25rem;">
-                        @php
-                            $heroImage = 'https://images.unsplash.com/photo-1522202176212-a2994003db40?w=800&q=80';
-                        @endphp
-                        <div style="border-radius:1rem; width:100%; height:100%; min-height:420px; position:relative; overflow:hidden;">
-                            <img src="{{ $heroImage }}" alt="Student learning English online" style="border-radius:1rem; width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" />
+                        <div style="border-radius:1rem; width:100%; height:100%; min-height:420px; position:relative; overflow:hidden; background:linear-gradient(135deg, #f5a623 0%, #d4831a 50%, #bc6f15 100%);">
+                            <img src="https://images.unsplash.com/photo-1522202176212-a2994003db40?w=800&q=80"
+                                 alt="Student learning English online"
+                                 style="border-radius:1rem; width:100%; height:100%; object-fit:cover; display:block; opacity:0; transition:opacity .5s ease;"
+                                 loading="lazy"
+                                 onload="this.style.opacity=1"
+                                 onerror="this.style.display='none'" />
                             <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(40,36,39,.15) 0%, rgba(40,36,39,.45) 100%); border-radius:1rem;"></div>
                             <div style="position:absolute; bottom:1.5rem; left:1.5rem; right:1.5rem; z-index:2;">
                                 <div style="padding:1rem 1.25rem; border-radius:.75rem; background:rgba(255,255,255,.85); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,.5); box-shadow:0 8px 25px rgba(0,0,0,.12);">
@@ -429,18 +431,18 @@
                     <div class="course-card">
                         @php
                             $courseImages = [
-                                'spoken' => 'https://images.unsplash.com/photo-1543165796-5426273eaab3?w=600&q=80',
-                                'business' => 'https://images.unsplash.com/photo-1552664733-d6d7a8a4345?w=600&q=80',
-                                'ielts' => 'https://images.unsplash.com/photo-1456511780578-1a7e62e0c3c5?w=600&q=80',
-                                'default' => 'https://images.unsplash.com/photo-1509062523349-8427d3e7e577?w=600&q=80',
+                                'spoken' => ['url' => 'https://images.unsplash.com/photo-1543165796-5426273eaab3?w=600&q=80', 'bg' => '#e8975a'],
+                                'business' => ['url' => 'https://images.unsplash.com/photo-1552664733-d6d7a8a4345?w=600&q=80', 'bg' => '#5a8ee8'],
+                                'ielts' => ['url' => 'https://images.unsplash.com/photo-1456511780578-1a7e62e0c3c5?w=600&q=80', 'bg' => '#7c5ae8'],
+                                'default' => ['url' => 'https://images.unsplash.com/photo-1509062523349-8427d3e7e577?w=600&q=80', 'bg' => '#5abce8'],
                             ];
                             $courseImg = str_contains(strtolower($course->title), 'spoken') ? $courseImages['spoken']
                                 : (str_contains(strtolower($course->title), 'business') ? $courseImages['business']
                                 : (str_contains(strtolower($course->title), 'ielts') ? $courseImages['ielts']
                                 : $courseImages['default']));
                         @endphp
-                        <div style="border-radius:.75rem; overflow:hidden; margin-bottom:1rem; height:160px;">
-                            <img src="{{ $courseImg }}" alt="{{ $course->title }}" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" />
+                        <div style="border-radius:.75rem; overflow:hidden; margin-bottom:1rem; height:160px; background:{{ $courseImg['bg'] }};">
+                            <img src="{{ $courseImg['url'] }}" alt="{{ $course->title }}" style="width:100%; height:100%; object-fit:cover; display:block; opacity:0; transition:opacity .5s ease;" loading="lazy" onload="this.style.opacity=1" onerror="this.style.display='none'" />
                         </div>
                         <div class="mb-3">
                             @if($course->is_featured)
@@ -705,18 +707,18 @@
                         @endif
                         @php
                             $pricingImages = [
-                                'spoken' => 'https://images.unsplash.com/photo-1543165796-5426273eaab3?w=600&q=80',
-                                'business' => 'https://images.unsplash.com/photo-1552664733-d6d7a8a4345?w=600&q=80',
-                                'ielts' => 'https://images.unsplash.com/photo-1456511780578-1a7e62e0c3c5?w=600&q=80',
-                                'default' => 'https://images.unsplash.com/photo-1509062523349-8427d3e7e577?w=600&q=80',
+                                'spoken' => ['url' => 'https://images.unsplash.com/photo-1543165796-5426273eaab3?w=600&q=80', 'bg' => '#e8975a'],
+                                'business' => ['url' => 'https://images.unsplash.com/photo-1552664733-d6d7a8a4345?w=600&q=80', 'bg' => '#5a8ee8'],
+                                'ielts' => ['url' => 'https://images.unsplash.com/photo-1456511780578-1a7e62e0c3c5?w=600&q=80', 'bg' => '#7c5ae8'],
+                                'default' => ['url' => 'https://images.unsplash.com/photo-1509062523349-8427d3e7e577?w=600&q=80', 'bg' => '#5abce8'],
                             ];
                             $pricingImg = str_contains(strtolower($course->title), 'spoken') ? $pricingImages['spoken']
                                 : (str_contains(strtolower($course->title), 'business') ? $pricingImages['business']
                                 : (str_contains(strtolower($course->title), 'ielts') ? $pricingImages['ielts']
                                 : $pricingImages['default']));
                         @endphp
-                        <div style="border-radius:.75rem; overflow:hidden; margin-bottom:1.25rem; height:140px;">
-                            <img src="{{ $pricingImg }}" alt="{{ $course->title }}" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" />
+                        <div style="border-radius:.75rem; overflow:hidden; margin-bottom:1.25rem; height:140px; background:{{ $pricingImg['bg'] }};">
+                            <img src="{{ $pricingImg['url'] }}" alt="{{ $course->title }}" style="width:100%; height:100%; object-fit:cover; display:block; opacity:0; transition:opacity .5s ease;" loading="lazy" onload="this.style.opacity=1" onerror="this.style.display='none'" />
                         </div>
                         <div class="font-bold text-lg mb-1">{{ $course->title }}</div>
                         <p class="text-sm text-[rgba(30,41,59,0.55)] mb-4">{{ $course->excerpt ?? 'Improve your English with structured lessons.' }}</p>
