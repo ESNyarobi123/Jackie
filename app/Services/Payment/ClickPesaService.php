@@ -7,6 +7,7 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ClickPesaService
@@ -20,19 +21,35 @@ class ClickPesaService
             (string) config('services.clickpesa.token_cache_key', 'clickpesa.token'),
             now()->addMinutes(55),
             function (): string {
-                $response = Http::baseUrl((string) config('services.clickpesa.base_url'))
+                $baseUrl = (string) config('services.clickpesa.base_url');
+                $clientId = (string) config('services.clickpesa.client_id');
+                $apiKey = (string) config('services.clickpesa.api_key');
+
+                Log::info('ClickPesa token request', [
+                    'base_url' => $baseUrl,
+                    'client_id' => $clientId,
+                    'api_key_length' => strlen($apiKey),
+                    'api_key_start' => substr($apiKey, 0, 6),
+                ]);
+
+                $response = Http::baseUrl($baseUrl)
                     ->acceptJson()
                     ->timeout((int) config('services.clickpesa.timeout', 20))
                     ->connectTimeout((int) config('services.clickpesa.connect_timeout', 10))
                     ->withHeaders([
-                        'client-id' => (string) config('services.clickpesa.client_id'),
-                        'api-key' => (string) config('services.clickpesa.api_key'),
+                        'client-id' => $clientId,
+                        'api-key' => $apiKey,
                     ])
-                    ->post('/generate-token')
-                    ->throw()
-                    ->json();
+                    ->post('/generate-token');
 
-                return (string) $response['token'];
+                Log::info('ClickPesa token response', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+
+                $response->throw();
+
+                return (string) $response->json('token');
             },
         );
     }
