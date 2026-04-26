@@ -200,74 +200,141 @@
                 <!-- Payment Status (after initiation) -->
                 @if($activePayment)
                     @php($paymentStatusValue = $activePayment->status?->value ?? (string) $activePayment->status)
-                    <div class="rounded-xl border p-5 {{ $paymentStatusValue === 'paid' ? 'border-green-200' : ($paymentStatusValue === 'failed' ? 'border-red-200' : 'border-amber-200') }}" style="background: {{ $paymentStatusValue === 'paid' ? 'rgba(34,197,94,.05)' : ($paymentStatusValue === 'failed' ? 'rgba(239,68,68,.05)' : 'rgba(245,158,11,.05)' ) }};">
-                        @if($paymentStatusValue === 'paid')
-                            <!-- Success -->
-                            <div class="text-center space-y-3">
-                                <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl" style="background: rgba(34,197,94,.15);">✅</div>
-                                <div>
-                                    <div class="font-bold text-green-700">Payment Confirmed!</div>
-                                    <div class="text-xs text-[rgba(30,41,59,0.5)] mt-1">Ref: {{ $activePayment->reference }}</div>
+
+                    @if($paymentStatusValue === 'paid')
+                        {{-- Success State --}}
+                        <div class="rounded-2xl overflow-hidden" style="background: linear-gradient(135deg, rgba(34,197,94,.06), rgba(16,185,129,.03)); border: 1px solid rgba(34,197,94,.15);">
+                            <div class="p-6 text-center">
+                                <div class="relative w-20 h-20 mx-auto mb-4">
+                                    <div class="absolute inset-0 rounded-full animate-ping opacity-20" style="background: rgba(34,197,94,.3);"></div>
+                                    <div class="relative w-20 h-20 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 8px 30px rgba(34,197,94,.3);">
+                                        <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
                                 </div>
+                                <h3 class="text-lg font-bold text-green-700 mb-1">Payment Confirmed!</h3>
+                                <p class="text-xs text-[rgba(30,41,59,0.45)] mb-3">Ref: {{ $activePayment->reference }}</p>
                                 @if($paymentMessage)
-                                    <div class="text-xs text-green-600">{{ $paymentMessage }}</div>
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: rgba(34,197,94,.1); color: #16a34a;">
+                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        {{ $paymentMessage }}
+                                    </div>
                                 @endif
                             </div>
-                        @elseif($paymentStatusValue === 'failed')
-                            <!-- Failed -->
-                            <div class="text-center space-y-3">
-                                <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl" style="background: rgba(239,68,68,.15);">❌</div>
-                                <div>
-                                    <div class="font-bold text-red-700">Payment Failed</div>
-                                    <div class="text-xs text-[rgba(30,41,59,0.5)] mt-1">Ref: {{ $activePayment->reference }}</div>
+                        </div>
+
+                    @elseif($paymentStatusValue === 'failed')
+                        {{-- Failed State --}}
+                        <div class="rounded-2xl overflow-hidden" style="background: linear-gradient(135deg, rgba(239,68,68,.05), rgba(220,38,38,.02)); border: 1px solid rgba(239,68,68,.12);">
+                            <div class="p-6 text-center">
+                                <div class="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, rgba(239,68,68,.12), rgba(239,68,68,.06));">
+                                    <svg class="w-10 h-10" style="color: #ef4444;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
                                 </div>
+                                <h3 class="text-lg font-bold text-red-700 mb-1">Payment Failed</h3>
+                                <p class="text-xs text-[rgba(30,41,59,0.45)] mb-2">Ref: {{ $activePayment->reference }}</p>
                                 @if($paymentMessage)
-                                    <div class="text-xs text-red-600">{{ $paymentMessage }}</div>
+                                    <p class="text-xs text-red-500 mb-4">{{ $paymentMessage }}</p>
                                 @endif
-                                <button wire:click="retryPayment" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all hover:scale-105" style="background: var(--color-terra); color: var(--color-ivory); box-shadow: 0 4px 14px rgba(245,130,32,.25);">
-                                    🔄 Try Again
+                                <button wire:click="retryPayment" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105 active:scale-95" style="background: var(--color-terra); color: var(--color-ivory); box-shadow: 0 4px 14px rgba(245,130,32,.25);">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"/></svg>
+                                    Try Again
                                 </button>
                             </div>
-                        @else
-                            <!-- Pending -->
-                            <div class="text-center space-y-3">
-                                <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl animate-pulse" style="background: rgba(245,158,11,.15);">⏳</div>
-                                <div>
-                                    <div class="font-bold text-amber-700">Awaiting Confirmation</div>
-                                    <div class="text-xs text-[rgba(30,41,59,0.5)] mt-1">Ref: {{ $activePayment->reference }}</div>
+                        </div>
+
+                    @else
+                        {{-- Pending / Awaiting State - Beautiful animated --}}
+                        <div wire:poll.5s="checkPaymentStatus" class="rounded-2xl overflow-hidden" style="background: linear-gradient(135deg, rgba(245,130,32,.04), rgba(251,191,36,.03)); border: 1px solid rgba(245,130,32,.12);">
+                            <style>
+                                @keyframes cpRipple { 0% { transform: scale(.8); opacity: .6; } 100% { transform: scale(2.2); opacity: 0; } }
+                                @keyframes cpFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+                                @keyframes cpDot { 0%,80%,100% { transform: scale(0); opacity:.4; } 40% { transform: scale(1); opacity:1; } }
+                                @keyframes cpProgress { 0% { width: 5%; } 50% { width: 65%; } 100% { width: 95%; } }
+                                @keyframes cpGlow { 0%,100% { box-shadow: 0 0 15px rgba(245,130,32,.15); } 50% { box-shadow: 0 0 30px rgba(245,130,32,.3); } }
+                                .cp-ripple-1 { animation: cpRipple 2s ease-out infinite; }
+                                .cp-ripple-2 { animation: cpRipple 2s ease-out .6s infinite; }
+                                .cp-ripple-3 { animation: cpRipple 2s ease-out 1.2s infinite; }
+                                .cp-float { animation: cpFloat 3s ease-in-out infinite; }
+                                .cp-dot-1 { animation: cpDot 1.4s ease-in-out infinite; }
+                                .cp-dot-2 { animation: cpDot 1.4s ease-in-out .2s infinite; }
+                                .cp-dot-3 { animation: cpDot 1.4s ease-in-out .4s infinite; }
+                                .cp-progress-bar { animation: cpProgress 12s ease-in-out infinite; }
+                                .cp-glow { animation: cpGlow 2s ease-in-out infinite; }
+                            </style>
+
+                            <div class="p-6 text-center">
+                                {{-- Animated phone icon with ripple rings --}}
+                                <div class="relative w-24 h-24 mx-auto mb-5">
+                                    <div class="absolute inset-0 rounded-full cp-ripple-1" style="border: 2px solid rgba(245,130,32,.2);"></div>
+                                    <div class="absolute inset-0 rounded-full cp-ripple-2" style="border: 2px solid rgba(245,130,32,.15);"></div>
+                                    <div class="absolute inset-0 rounded-full cp-ripple-3" style="border: 2px solid rgba(245,130,32,.1);"></div>
+                                    <div class="relative w-24 h-24 rounded-full flex items-center justify-center cp-float cp-glow" style="background: linear-gradient(135deg, #f58220, #e8751a); box-shadow: 0 8px 30px rgba(245,130,32,.25);">
+                                        <svg class="w-11 h-11 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/>
+                                        </svg>
+                                    </div>
                                 </div>
-                                @if($paymentMessage)
-                                    <div class="text-xs text-amber-600">{{ $paymentMessage }}</div>
-                                @endif
-                                <div class="flex items-center justify-center gap-1 text-[.5625rem] text-[rgba(30,41,59,0.4)]">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-                                    Checking automatically... Tap below if needed
+
+                                {{-- Title --}}
+                                <h3 class="text-lg font-bold mb-1" style="color: var(--color-smoke);">Approve on Your Phone</h3>
+                                <p class="text-xs text-[rgba(30,41,59,0.5)] mb-5">A USSD prompt has been sent to your phone. Enter your PIN to confirm.</p>
+
+                                {{-- Progress steps --}}
+                                <div class="flex items-center justify-center gap-0 mb-5 px-4">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                        </div>
+                                        <span class="text-[.5625rem] mt-1.5 font-medium text-green-600">Sent</span>
+                                    </div>
+                                    <div class="flex-1 h-0.5 mx-1 rounded-full overflow-hidden" style="background: rgba(30,41,59,.06);">
+                                        <div class="h-full rounded-full cp-progress-bar" style="background: linear-gradient(90deg, #22c55e, #f59e0b);"></div>
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold animate-pulse" style="background: linear-gradient(135deg, rgba(245,130,32,.15), rgba(245,130,32,.08)); color: var(--color-terra); border: 2px solid rgba(245,130,32,.2);">
+                                            2
+                                        </div>
+                                        <span class="text-[.5625rem] mt-1.5 font-medium" style="color: var(--color-terra);">Confirm</span>
+                                    </div>
+                                    <div class="flex-1 h-0.5 mx-1 rounded-full" style="background: rgba(30,41,59,.06);"></div>
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style="background: rgba(30,41,59,.04); color: rgba(30,41,59,.25); border: 2px solid rgba(30,41,59,.06);">
+                                            3
+                                        </div>
+                                        <span class="text-[.5625rem] mt-1.5 font-medium text-[rgba(30,41,59,0.3)]">Done</span>
+                                    </div>
                                 </div>
+
+                                {{-- Animated loading dots --}}
+                                <div class="flex items-center justify-center gap-1.5 mb-4">
+                                    <span class="w-2 h-2 rounded-full cp-dot-1" style="background: var(--color-terra);"></span>
+                                    <span class="w-2 h-2 rounded-full cp-dot-2" style="background: var(--color-terra);"></span>
+                                    <span class="w-2 h-2 rounded-full cp-dot-3" style="background: var(--color-terra);"></span>
+                                </div>
+
+                                <p class="text-[.6875rem] font-medium" style="color: var(--color-terra);">Waiting for confirmation...</p>
+                                <p class="text-[.5625rem] text-[rgba(30,41,59,0.35)] mt-1">Auto-checking every 5 seconds</p>
                             </div>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                 @endif
             </div>
 
             <!-- Modal Actions -->
-            <div class="mt-6 flex justify-end gap-2">
-                <flux:button variant="ghost" wire:click="$set('showSubscribeModal', false)">
-                    {{ $activePayment && ($activePayment->status?->value ?? (string) $activePayment->status) === 'paid' ? 'Close' : 'Cancel' }}
-                </flux:button>
-                @if($activePayment && ($activePayment->status?->value ?? (string) $activePayment->status) === 'pending')
-                    <flux:button variant="primary" wire:click="checkPaymentStatus" wire:loading.attr="disabled" class="bg-amber-600! hover:bg-amber-700!">
-                        <span wire:loading.remove>🔄 Check Status</span>
-                        <span wire:loading>Checking…</span>
-                    </flux:button>
-                @elseif(! $activePayment)
+            <div class="mt-5 flex justify-end gap-2">
+                @if(!$activePayment)
+                    <flux:button variant="ghost" wire:click="$set('showSubscribeModal', false)">Cancel</flux:button>
                     <flux:button variant="primary" wire:click="startClickPesaPayment" wire:loading.attr="disabled" class="{{ !$selectedNetwork ? 'opacity-50' : '' }}">
                         <span wire:loading.remove>📱 Send USSD Push</span>
                         <span wire:loading>Sending…</span>
                     </flux:button>
-                @else
-                    <flux:button variant="primary" href="{{ route('student.courses') }}" wire:navigate>
+                @elseif($paymentStatusValue === 'paid')
+                    <flux:button variant="primary" href="{{ route('student.courses') }}" wire:navigate class="bg-green-600! hover:bg-green-700!">
                         🎉 Start Learning
                     </flux:button>
+                @elseif($paymentStatusValue === 'failed')
+                    <flux:button variant="ghost" wire:click="$set('showSubscribeModal', false)">Close</flux:button>
+                @else
+                    <flux:button variant="ghost" wire:click="$set('showSubscribeModal', false)" class="text-xs!">Cancel Payment</flux:button>
                 @endif
             </div>
         @endif
