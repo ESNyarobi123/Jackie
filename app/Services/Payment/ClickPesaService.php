@@ -49,7 +49,11 @@ class ClickPesaService
 
                 $response->throw();
 
-                return (string) $response->json('token');
+                $token = (string) $response->json('token');
+
+                // ClickPesa returns token with "Bearer " prefix — strip it
+                // since authenticatedRequest() adds its own "Bearer " prefix
+                return str_starts_with($token, 'Bearer ') ? substr($token, 7) : $token;
             },
         );
     }
