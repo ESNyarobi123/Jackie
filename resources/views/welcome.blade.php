@@ -312,15 +312,14 @@
                 <div class="hero-visual-wrap reveal" style="transition-delay:.15s">
                     <div class="glass-card glass-elevated p-3" style="border-radius:1.25rem;">
                         <div style="border-radius:1rem; width:100%; height:100%; min-height:420px; position:relative; overflow:hidden; background:linear-gradient(135deg, #f5a623 0%, #d4831a 50%, #bc6f15 100%);">
-                            <img src="https://images.unsplash.com/photo-1522202176212-a2994003db40?w=800&q=80"
+                            <img src="https://www.usnews.com/object/image/0000018d-6643-d265-ad9f-ffe32fc20000/https-media-gettyimages-com-id-1300822108-photo-group-of-unrecognisable-international-students-having-online-meeting.jpg?update-time=1706817712489&size=responsive970"
                                  alt="Student learning English online"
                                  style="border-radius:1rem; width:100%; height:100%; object-fit:cover; display:block; opacity:0; transition:opacity .5s ease;"
                                  loading="lazy"
                                  onload="this.style.opacity=1"
                                  onerror="this.style.display='none'" />
-                            <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(40,36,39,.15) 0%, rgba(40,36,39,.45) 100%); border-radius:1rem;"></div>
                             <div style="position:absolute; bottom:1.5rem; left:1.5rem; right:1.5rem; z-index:2;">
-                                <div style="padding:1rem 1.25rem; border-radius:.75rem; background:rgba(255,255,255,.85); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,.5); box-shadow:0 8px 25px rgba(0,0,0,.12);">
+                                <div style="padding:1rem 1.25rem; border-radius:.75rem; background:rgba(255,255,255,.92); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,.6); box-shadow:0 8px 32px rgba(0,0,0,.18);">
                                     <div style="display:flex; align-items:center; gap:.5rem; margin-bottom:.35rem;">
                                         <div style="width:8px; height:8px; border-radius:50%; background:#22c55e;"></div>
                                         <span style="font-size:.75rem; font-weight:700; color:#16a34a; text-transform:uppercase; letter-spacing:.05em;">Live Now</span>
