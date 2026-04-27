@@ -18,10 +18,22 @@ use Livewire\Component;
 class Dashboard extends Component
 {
     public $stats = [];
+
     public $recentUsers = [];
+
     public $recentEnrollments = [];
+
     public $recentSubscriptions = [];
+
     public $upcomingLiveClasses = [];
+
+    public $enrollmentTrend = [];
+
+    public $revenueTrend = [];
+
+    public $subscriptionDistribution = [];
+
+    public $enrollmentStatusDistribution = [];
 
     public function mount()
     {
@@ -30,6 +42,10 @@ class Dashboard extends Component
         $this->loadRecentEnrollments();
         $this->loadRecentSubscriptions();
         $this->loadUpcomingLiveClasses();
+        $this->loadEnrollmentTrend();
+        $this->loadRevenueTrend();
+        $this->loadSubscriptionDistribution();
+        $this->loadEnrollmentStatusDistribution();
     }
 
     public function calculateStats()
@@ -80,6 +96,52 @@ class Dashboard extends Component
             ->orderBy('scheduled_at')
             ->limit(5)
             ->get();
+    }
+
+    public function loadEnrollmentTrend()
+    {
+        $this->enrollmentTrend = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i * 7)->startOfWeek();
+            $count = Enrollment::whereBetween('enrolled_at', [$date, $date->copy()->addWeek()])->count();
+            $this->enrollmentTrend[] = [
+                'label' => $date->format('M d'),
+                'value' => $count,
+            ];
+        }
+    }
+
+    public function loadRevenueTrend()
+    {
+        $this->revenueTrend = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i)->startOfMonth();
+            $revenue = Payment::where('status', PaymentStatus::Paid)
+                ->whereBetween('paid_at', [$month, $month->copy()->addMonth()])
+                ->sum('amount') ?? 0;
+            $this->revenueTrend[] = [
+                'label' => $month->format('M'),
+                'value' => (int) $revenue,
+            ];
+        }
+    }
+
+    public function loadSubscriptionDistribution()
+    {
+        $this->subscriptionDistribution = [
+            ['label' => 'Active', 'value' => Subscription::where('status', SubscriptionStatus::Active)->count(), 'color' => '#22c55e'],
+            ['label' => 'Expired', 'value' => Subscription::where('status', SubscriptionStatus::Expired)->count(), 'color' => '#ef4444'],
+            ['label' => 'Trial', 'value' => Subscription::where('status', SubscriptionStatus::Active)->whereNull('payment_id')->where('access_ends_at', '>', now())->count(), 'color' => '#f59e0b'],
+        ];
+    }
+
+    public function loadEnrollmentStatusDistribution()
+    {
+        $this->enrollmentStatusDistribution = [
+            ['label' => 'Active', 'value' => Enrollment::where('status', EnrollmentStatus::Active)->count(), 'color' => '#22c55e'],
+            ['label' => 'Completed', 'value' => Enrollment::where('status', EnrollmentStatus::Completed)->count(), 'color' => '#3b82f6'],
+            ['label' => 'Expired', 'value' => Enrollment::where('status', EnrollmentStatus::Expired)->count(), 'color' => '#ef4444'],
+        ];
     }
 
     public function render()
